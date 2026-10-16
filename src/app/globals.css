@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #05070a;
+  --ink: #e9edf3;
+  --ink-dim: #8b96a5;
+  --accent: #3b82f6;
+  --sky: #38bdf8;
+  --line: rgba(233, 237, 243, 0.85);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-dim: var(--ink-dim);
+  --color-accent: var(--accent);
+  --color-azure: var(--sky);
+  --font-sans: var(--font-space-grotesk);
+  --font-serif: var(--font-cormorant);
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #34d399;
+  color: #04140d;
+}
+
+/* Animated aurora wash behind the whole site (not the intro, which sits in its own
+   fixed-position stage above this). Pure CSS, GPU-friendly transform animation. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 36% at 20% 24%, rgba(59, 130, 246, 0.11), transparent 65%),
+    radial-gradient(36% 40% at 80% 70%, rgba(56, 189, 248, 0.09), transparent 65%),
+    radial-gradient(28% 28% at 60% 16%, rgba(147, 197, 253, 0.055), transparent 60%),
+    radial-gradient(30% 30% at 35% 80%, rgba(37, 99, 235, 0.07), transparent 65%);
+  animation: aurora 26s ease-in-out infinite alternate;
+}
+@keyframes aurora {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-3%, 3%, 0) scale(1.04);
+  }
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(233, 237, 243, 0.034) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 237, 243, 0.034) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(90% 80% at 50% 20%, #000 20%, transparent 90%);
+  mask-image: radial-gradient(90% 80% at 50% 20%, #000 20%, transparent 90%);
+}
+#site {
+  position: relative;
+  z-index: 1;
+}
+
+/* Extra glow + grain behind the hero specifically, on top of the site-wide aurora. */
+.hero-glow {
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 60% at 88% 12%, rgba(56, 189, 248, 0.08), transparent 62%),
+    radial-gradient(60% 65% at 6% 92%, rgba(59, 130, 246, 0.08), transparent 62%);
+}
+.hero-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+.hero-glow > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Section numbers (01, 02, ...) auto-increment — no need to pass a number as a prop. */
+#site {
+  counter-reset: sec;
+}
+.section-title::before {
+  counter-increment: sec;
+  content: "0" counter(sec);
+  color: var(--accent);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 15px;
+  font-weight: 500;
+  margin-right: 14px;
+}
+
+/* Custom cursor replaces the system one, so only hide it where the cursor can track
+   (fine pointer, motion allowed) — touch devices and reduced-motion keep the real one. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  body,
+  a,
+  button {
+    cursor: none;
+  }
+}
+
+/* Hero pops in when the intro finishes. Visible by default so no-JS / repeat visits are fine. */
+.hero-pop {
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+html[data-intro="playing"] .hero-pop {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+/* The two headline lines lift in with a slight stagger between them. */
+.hero-line {
+  display: block;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hero-line:nth-child(2) {
+  transition-delay: 0.15s;
+}
+html[data-intro="playing"] .hero-line {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* Pulsing status dot on the "open to work" pill. */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+.status-dot {
+  animation: pulse 2s infinite;
+}
+
+/* Shared tilt + cursor-following glow for cards and the terminal (see TiltGlow.tsx). */
+.tilt-glow {
+  position: relative;
+  transition:
+    transform 0.18s ease-out,
+    border-color 0.25s ease;
+}
+.tilt-glow:hover {
+  border-color: rgba(59, 130, 246, 0.35);
+}
+.tilt-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(220px circle at var(--gx, 50%) var(--gy, 50%), rgba(233, 237, 243, 0.07), transparent 60%);
+}
+.tilt-glow:hover::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pop,
+  .hero-line,
+  .tilt-glow {
+    transition: none;
+  }
+}
+
+.cursor-ring.grow {
+  width: 56px;
+  height: 56px;
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.85);
+}
+
+/* Small pulsing "available" indicator next to the name in the nav. */
+.work-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  margin-left: 12px;
+  animation: pulse 2s infinite;
+}
+.work-text {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #34d399;
+  letter-spacing: 0.02em;
+}
+
+/* GitHub/live link at the bottom of a featured project card. */
+.proj-link {
+  color: #34d399;
+}
+
+/* Blinking block cursor on the terminal's self-typing prompt. */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.typing-caret {
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .typing-caret {
+    animation: none;
+  }
+}
+
+/* Visitors who ask for reduced motion: nothing on the page should move on its own, and
+   links should jump instead of gliding. Kept at the very end of the file so it wins over
+   the animation rules defined above (the dots are declared late, after the earlier
+   reduced-motion block). Without this, the blanket rule in intro.css squeezes each pulse
+   to 0.00001s and repeats it forever, which flickers instead of pulsing. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  body::before,
+  .status-dot,
+  .work-dot {
+    animation: none;
+  }
+}
