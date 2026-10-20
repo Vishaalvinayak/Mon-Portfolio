@@ -143,24 +143,7 @@ export const projects: Project[] = [
       },
     ],
   },
-  {
-    name: "All-sports social platform",
-    tag: "In planning",
-    featured: false,
-    stack: ["Flutter / React Native", "Supabase"],
-    bullets: [
-      "A social platform built around an athlete's sports identity and career profile, spanning cricket, football, fitness and more.",
-    ],
-  },
-  {
-    name: "Community app",
-    tag: "Early stage",
-    featured: false,
-    stack: [],
-    bullets: [
-      "A community-based mobile app, currently in architecture and platform-choice planning.",
-    ],
-  },
+  
 ];
 
 export const experience: Experience[] = [
