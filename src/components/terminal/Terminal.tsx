@@ -56,7 +56,7 @@ function runCommand(raw: string): string[] {
     case "help":
       return ["Available commands:", COMMANDS.map((c) => `  ${c}`).join("\n")];
     case "whoami":
-      return [`${profile.role.toLowerCase()} · BCA final year`];
+      return [`${profile.role.toLowerCase()}`];
     case "about":
       return [profile.summary];
     case "skills":
@@ -65,23 +65,37 @@ function runCommand(raw: string): string[] {
       const n = parseInt(rest[0], 10);
       if (!Number.isNaN(n) && projects[n - 1]) {
         const p = projects[n - 1];
-        return [`${p.name}${p.tag ? ` (${p.tag})` : ""}`, ...p.bullets.map((b) => `  - ${b}`)];
+        return [
+          `${p.name}${p.tag ? ` (${p.tag})` : ""}`,
+          ...p.bullets.map((b) => `  - ${b}`),
+        ];
       }
       return [
-        ...projects.map((p, i) => `${i + 1}. ${p.name}${p.tag ? ` — ${p.tag}` : ""}`),
+        ...projects.map(
+          (p, i) => `${i + 1}. ${p.name}${p.tag ? ` — ${p.tag}` : ""}`,
+        ),
         "type 'projects <number>' for details",
       ];
     }
     case "experience":
       return experience
-        .map((e) => [`${e.role} · ${e.company} (${e.start} – ${e.end})`, ...e.bullets.map((b) => `  - ${b}`)].join("\n"))
+        .map((e) =>
+          [
+            `${e.role} · ${e.company} (${e.start} – ${e.end})`,
+            ...e.bullets.map((b) => `  - ${b}`),
+          ].join("\n"),
+        )
         .concat(achievements.map((a) => `${a.title} — ${a.event}, ${a.year}`));
     case "education":
       return education.map((e) => `${e.degree}, ${e.school} — ${e.grade}`);
     case "certifications":
       return certifications.map((c) => `${c.name} — ${c.issuer}`);
     case "contact":
-      return [profile.email, findLink("github") ?? "", findLink("linkedin") ?? ""].filter(Boolean);
+      return [
+        profile.email,
+        findLink("github") ?? "",
+        findLink("linkedin") ?? "",
+      ].filter(Boolean);
     case "resume":
     case "cv": // unlisted shortcut — people try it, so it works, but `help` stays uncluttered
       open("/resume.pdf");
@@ -103,14 +117,19 @@ function runCommand(raw: string): string[] {
 
 const BOOT: Line[] = [
   { id: nextId(), kind: "in", text: "whoami" },
-  { id: nextId(), kind: "out", text: `${profile.role.toLowerCase()} · BCA final year` },
+  {
+    id: nextId(),
+    kind: "out",
+    text: `${profile.role.toLowerCase()}`,
+  },
   { id: nextId(), kind: "in", text: "cat stack.txt" },
   {
     id: nextId(),
     kind: "out",
-    text: [...(skills.find((g) => g.label === "Frontend")?.items ?? []), ...(skills.find((g) => g.label === "Backend")?.items ?? [])].join(
-      " · ",
-    ),
+    text: [
+      ...(skills.find((g) => g.label === "Frontend")?.items ?? []),
+      ...(skills.find((g) => g.label === "Backend")?.items ?? []),
+    ].join(" · "),
   },
   { id: nextId(), kind: "in", text: "open_to_work --status" },
   { id: nextId(), kind: "out", text: "true" },
@@ -144,7 +163,8 @@ export function Terminal() {
 
     let cancelled = false;
     const timers: number[] = [];
-    const wait = (ms: number) => new Promise<void>((res) => timers.push(window.setTimeout(res, ms)));
+    const wait = (ms: number) =>
+      new Promise<void>((res) => timers.push(window.setTimeout(res, ms)));
     const root = document.documentElement;
 
     // Only type while the terminal is on screen. It sits at the very bottom of the page, so
@@ -189,7 +209,8 @@ export function Terminal() {
   }, [demoActive]);
 
   useEffect(() => {
-    if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+    if (bodyRef.current)
+      bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
   }, [lines]);
 
   function submit(raw: string) {
@@ -200,7 +221,11 @@ export function Terminal() {
     if (output[0] === "__clear__") {
       setLines([]);
     } else {
-      setLines((prev) => [...prev, echo, ...output.map((text) => ({ id: nextId(), kind: "out" as const, text }))]);
+      setLines((prev) => [
+        ...prev,
+        echo,
+        ...output.map((text) => ({ id: nextId(), kind: "out" as const, text })),
+      ]);
     }
     if (cmd) {
       setHistory((prev) => [...prev, cmd]);
@@ -216,7 +241,8 @@ export function Terminal() {
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       if (!history.length) return;
-      const next = histIndex === null ? history.length - 1 : Math.max(0, histIndex - 1);
+      const next =
+        histIndex === null ? history.length - 1 : Math.max(0, histIndex - 1);
       setHistIndex(next);
       setValue(history[next]);
     } else if (e.key === "ArrowDown") {
@@ -245,10 +271,15 @@ export function Terminal() {
         <i className="h-2.5 w-2.5 rounded-full bg-divider-dark" />
         <i className="h-2.5 w-2.5 rounded-full bg-divider-dark" />
         <i className="h-2.5 w-2.5 rounded-full bg-divider-dark" />
-        <span className="ml-auto text-[11px] text-muted">vishaal@portfolio ~ {lastCmd}</span>
+        <span className="ml-auto text-[11px] text-muted">
+          vishaal@portfolio ~ {lastCmd}
+        </span>
       </div>
 
-      <div ref={bodyRef} className="max-h-[280px] overflow-y-auto p-[18px] font-mono text-[13px] leading-[1.9]">
+      <div
+        ref={bodyRef}
+        className="max-h-[280px] overflow-y-auto p-[18px] font-mono text-[13px] leading-[1.9]"
+      >
         <div role="log" aria-live="polite">
           {lines.map((l) =>
             l.kind === "in" ? (
@@ -278,7 +309,10 @@ export function Terminal() {
               className="w-full bg-transparent text-ivory caret-brass outline-none placeholder:text-muted/60"
             />
             {demoActive && (
-              <span aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center text-ivory">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 flex items-center text-ivory"
+              >
                 {demoText}
                 <span className="typing-caret ml-px inline-block h-[1.15em] w-[7px] translate-y-px bg-brass" />
               </span>
