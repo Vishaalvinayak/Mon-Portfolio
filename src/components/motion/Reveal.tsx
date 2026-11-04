@@ -1,27 +1,28 @@
-"use client";
-
-import { motion, useReducedMotion } from "motion/react";
-import { duration, ease } from "@/lib/motion/tokens";
+import type { CSSProperties, ElementType, ReactNode } from "react";
 
 interface RevealProps {
-  children: React.ReactNode;
-  delay?: number;
-  y?: number;
+  children?: ReactNode;
+  delay?: number; // seconds
+  y?: number; // px the element rises from (variant "up")
   className?: string;
+  as?: ElementType;
+  /** up: fade + lift · line / line-y: a rule draws itself · wipe: clip left to right */
+  variant?: "up" | "line" | "line-y" | "wipe";
 }
 
-/** Fades and lifts its children into view once, when they scroll on screen. */
-export function Reveal({ children, delay = 0, y = 24, className }: RevealProps) {
-  const reduce = useReducedMotion();
+/**
+ * Fades and lifts its children into view once, when they scroll on screen.
+ * Server component: it only renders attributes. The page-level <RevealController/> hides
+ * below-the-fold items and reveals them, so content stays visible if JS never runs.
+ */
+export function Reveal({ children, delay = 0, y = 18, className, as: Tag = "div", variant = "up" }: RevealProps) {
   return (
-    <motion.div
+    <Tag
       className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      transition={{ duration: duration.base, ease, delay }}
+      data-reveal={variant}
+      style={{ "--d": `${delay}s`, "--y": `${y}px` } as CSSProperties}
     >
       {children}
-    </motion.div>
+    </Tag>
   );
 }

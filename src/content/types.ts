@@ -11,8 +11,8 @@ export interface Profile {
   contactNote: string; // longer availability sentence, shown in the Contact section
   location: string;
   email: string;
-  phone: string;
   summary: string;
+  about: string;       // the About section's introduction paragraph
   availability: string; // short nav-bar line, e.g. "Available for work"
 }
 
@@ -44,6 +44,9 @@ export interface Project {
   stack: string[];
   bullets: string[];
   links?: Link[]; // repo / live demo, add when you have them
+  // Optional screenshot for a featured project. When present it scales in on scroll;
+  // when absent nothing is shown (no placeholder). Put the file in /public/projects/.
+  image?: { src: string; alt: string; width: number; height: number };
 }
 
 export interface Experience {

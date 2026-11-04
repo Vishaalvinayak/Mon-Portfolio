@@ -18,16 +18,16 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "0 88px",
-          background: "#05070a",
-          backgroundImage: "radial-gradient(circle at 88% 12%, rgba(59,130,246,0.28), rgba(5,7,10,0) 55%)",
-          color: "#e9edf3",
+          background: "#211A15",
+          backgroundImage: "radial-gradient(circle at 88% 12%, rgba(180,154,104,0.22), rgba(17,17,15,0) 55%)",
+          color: "#EAE2D5",
         }}
       >
-        <div style={{ display: "flex", fontSize: 30, color: "#3b82f6", marginBottom: 28 }}>$ whoami</div>
+        <div style={{ display: "flex", fontSize: 30, color: "#B49A68", marginBottom: 28 }}>$ whoami</div>
 
         <div style={{ display: "flex", fontSize: 104, fontWeight: 700, lineHeight: 1.05 }}>{profile.name}</div>
 
-        <div style={{ display: "flex", fontSize: 44, color: "#3b82f6", marginTop: 20 }}>{profile.role}</div>
+        <div style={{ display: "flex", fontSize: 44, color: "#B49A68", marginTop: 20 }}>{profile.role}</div>
 
         <div
           style={{
@@ -36,8 +36,8 @@ export default function OpengraphImage() {
             marginTop: 56,
             padding: "10px 24px",
             fontSize: 26,
-            color: "#8b96a5",
-            border: "1px solid rgba(59,130,246,0.5)",
+            color: "#C4BCAF",
+            border: "1px solid rgba(180,154,104,0.5)",
             borderRadius: 999,
           }}
         >

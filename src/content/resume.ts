@@ -20,14 +20,15 @@ const targetRoles = "backend & full-stack";
 export const profile: Profile = {
   name: "Vishaal Vinayak",
   fullName: "Vishaal Vinayak A B",
-  role: "Full-stack developer",
+  role: "Java Backend Developer",
   status: `Open to ${targetRoles} roles · 2026`,
   headline: "I build products from the interface down to the database.",
   contactNote: `Open to ${targetRoles} opportunities — based in Thanjavur, Tamil Nadu, and happy to talk about any of the projects above.`,
   location: "Thanjavur, Tamil Nadu, India",
   email: "vishaalvinayakab@gmail.com",
-  phone: "+91 82700 68232",
   summary: `Fresher software developer with hands-on experience in Java, Spring Boot, React and TypeScript, having built full-stack, production-style applications end-to-end. Currently seeking ${targetRoles} developer roles.`,
+  about:
+    "Hi, I’m Vishaal \u2014 a developer focused on building reliable backend systems and useful digital products. I work with Java, Spring Boot, APIs, and databases, with an emphasis on clean code, practical problem-solving, and maintainable software.",
   availability: "Available for work",
 };
 
@@ -45,6 +46,7 @@ export const education: Education[] = [
     degree: "Bachelor of Computer Applications (BCA)",
     start: "June 2023",
     end: "May 2026",
+    note: "Final year",
     grade: "CGPA: 8.56",
     location: "Kattankulathur, Tamil Nadu",
   },
@@ -143,7 +145,6 @@ export const projects: Project[] = [
       },
     ],
   },
-  
 ];
 
 export const experience: Experience[] = [

@@ -1,103 +1,264 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Obsidian & Antique Brass — the one place colours are defined.
+   `@theme static` emits every variable below onto :root AND generates the matching
+   Tailwind utilities (bg-obsidian, text-ivory, border-divider-dark, ...).
+   --------------------------------------------------------------------------- */
+@theme static {
+  --color-obsidian: #11110f;
+  --color-charcoal: #25241f;
+  --color-espresso: #211a15;
+  --color-light-grey: #d8d6d1;
+  --color-warm-ivory: #eae2d5;
+  --color-ivory: #eae2d5; /* same value as warm-ivory; the short name the components use */
+  --color-paper: #f4efe6;
+  --color-ink: #1c1b18;
+  --color-antique-brass: #b49a68;
+  --color-brass: #b49a68; /* short name used by the components */
+  --color-taupe: #938a7d;
+  --color-muted: #c4bcaf;
+  --color-hero: #d8d6d1;
+  --color-divider-dark: #403d35;
+  --color-divider-light: #c5c1b8;
+
+  /* Derived (not in the supplied palette):
+     brass-ink — brass darkened so small labels stay readable on grey/ivory (4.5:1+)
+     ink-soft  — secondary body text on grey/ivory/paper (5:1+)
+     champagne — the intro's light colour                                           */
+  --color-champagne: #d8b67a;
+  --color-brass-ink: #6e5b33;
+  --color-ink-soft: #5a5549;
+}
+
+/* The named roles from the palette brief (plain variables). */
 :root {
-  --bg: #05070a;
-  --ink: #e9edf3;
-  --ink-dim: #8b96a5;
-  --accent: #3b82f6;
-  --sky: #38bdf8;
-  --line: rgba(233, 237, 243, 0.85);
+  --intro-bg: #211a15;
+  --intro-text: #f1e8d9;
+  --intro-light: #d8b67a;
+  --hero-bg: #d8d6d1;
+  --hero-text: #1c1b18;
+  --hero-muted: #706c65;
+  --border-dark: #403d35;
+  --border-light: #c5c1b8;
 }
 
 @theme inline {
-  --color-bg: var(--bg);
-  --color-ink: var(--ink);
-  --color-dim: var(--ink-dim);
-  --color-accent: var(--accent);
-  --color-azure: var(--sky);
   --font-sans: var(--font-space-grotesk);
   --font-serif: var(--font-cormorant);
 }
 
+/* ---------- Tones: every section declares data-tone and inherits its colours ---------- */
+[data-tone] {
+  background: var(--tone-bg);
+  color: var(--fg);
+}
+[data-tone="dark"] {
+  --tone-bg: var(--color-obsidian);
+  --fg: var(--color-ivory);
+  --fg-soft: var(--color-muted);
+  --rule: var(--color-divider-dark);
+  --label: var(--color-brass);
+}
+[data-tone="hero"] {
+  --tone-bg: var(--hero-bg);
+  --fg: var(--hero-text);
+  --fg-soft: var(--color-ink-soft);
+  --rule: var(--border-light);
+  --label: var(--color-brass-ink);
+}
+[data-tone="espresso"] {
+  --tone-bg: var(--color-espresso);
+  --fg: var(--color-warm-ivory);
+  --fg-soft: var(--color-muted);
+  --rule: var(--border-dark);
+  --label: var(--color-antique-brass);
+}
+[data-tone="work"] {
+  --tone-bg: var(--color-charcoal);
+  --fg: var(--color-warm-ivory);
+  --fg-soft: var(--color-muted);
+  --rule: var(--border-dark);
+  --label: var(--color-antique-brass);
+}
+[data-tone="grey"] {
+  --tone-bg: var(--color-light-grey);
+  --fg: var(--color-ink);
+  --fg-soft: var(--color-ink-soft);
+  --rule: var(--border-light);
+  --label: var(--color-brass-ink);
+}
+[data-tone="charcoal"] {
+  --tone-bg: var(--color-charcoal);
+  --fg: var(--color-paper);
+  --fg-soft: var(--color-muted);
+  --rule: var(--color-divider-dark);
+  --label: var(--color-brass);
+}
+[data-tone="light"] {
+  --tone-bg: var(--color-ivory);
+  --fg: var(--color-ink);
+  --fg-soft: var(--color-ink-soft);
+  --rule: var(--border-light);
+  --label: var(--color-brass-ink);
+}
+[data-tone="paper"] {
+  --tone-bg: var(--color-paper);
+  --fg: var(--color-ink);
+  --fg-soft: var(--color-ink-soft);
+  --rule: var(--border-light);
+  --label: var(--color-brass-ink);
+}
+.t-soft {
+  color: var(--fg-soft);
+}
+.t-label {
+  color: var(--label);
+}
+.b-rule {
+  border-color: var(--rule);
+}
+.bg-rule {
+  background: var(--rule);
+}
+
 html {
-  background: var(--bg);
+  background: var(--color-espresso);
   scroll-behavior: smooth;
 }
 
 body {
   min-height: 100dvh;
-  background: var(--bg);
-  color: var(--ink);
+  background: var(--color-espresso);
+  color: var(--color-ivory);
   font-family: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: #34d399;
-  color: #04140d;
+  background: var(--color-brass);
+  color: var(--color-obsidian);
 }
 
-/* Animated aurora wash behind the whole site (not the intro, which sits in its own
-   fixed-position stage above this). Pure CSS, GPU-friendly transform animation. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: -25%;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(40% 36% at 20% 24%, rgba(59, 130, 246, 0.11), transparent 65%),
-    radial-gradient(36% 40% at 80% 70%, rgba(56, 189, 248, 0.09), transparent 65%),
-    radial-gradient(28% 28% at 60% 16%, rgba(147, 197, 253, 0.055), transparent 60%),
-    radial-gradient(30% 30% at 35% 80%, rgba(37, 99, 235, 0.07), transparent 65%);
-  animation: aurora 26s ease-in-out infinite alternate;
+:focus-visible {
+  outline: 2px solid var(--label, var(--color-brass));
+  outline-offset: 3px;
 }
-@keyframes aurora {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(4%, -3%, 0) scale(1.1);
-  }
-  100% {
-    transform: translate3d(-3%, 3%, 0) scale(1.04);
-  }
-}
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.5;
-  background-image:
-    linear-gradient(rgba(233, 237, 243, 0.034) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(233, 237, 243, 0.034) 1px, transparent 1px);
-  background-size: 64px 64px;
-  -webkit-mask-image: radial-gradient(90% 80% at 50% 20%, #000 20%, transparent 90%);
-  mask-image: radial-gradient(90% 80% at 50% 20%, #000 20%, transparent 90%);
-}
+
 #site {
   position: relative;
   z-index: 1;
 }
 
-/* Extra glow + grain behind the hero specifically, on top of the site-wide aurora. */
-.hero-glow {
-  position: relative;
+/* ---------- Section numbers: a CSS counter, so sections never pass their own number ---------- */
+#site {
+  counter-reset: sec;
+}
+.section-no::before {
+  counter-increment: sec;
+  content: counter(sec, decimal-leading-zero);
+}
+/* The About text is rendered twice (dark layer + ivory layer); the copy must not count again. */
+.section-no[data-dup]::before {
+  counter-increment: none;
+}
+
+/* ---------- Spade cursor (CustomCursor.tsx) ----------
+   The native cursor is hidden only on hover-capable fine pointers, and only while the spade is
+   mounted (the component toggles html.has-spade-cursor). !important so it also wins over
+   component rules such as the intro's Skip button. */
+@media (hover: hover) and (pointer: fine) {
+  html.has-spade-cursor,
+  html.has-spade-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll-reveal system (CSS-driven; RevealController only toggles attributes).
+   Content is visible by default. JS marks below-the-fold elements data-armed (hidden),
+   then data-in when they scroll into view. If JS never runs, nothing is ever hidden.
+   --------------------------------------------------------------------------- */
+[data-reveal] {
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+[data-reveal="up"] {
+  transition:
+    opacity 0.7s var(--ease) var(--d, 0s),
+    transform 0.7s var(--ease) var(--d, 0s);
+}
+[data-reveal="up"][data-armed]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(var(--y, 18px));
+}
+[data-reveal="line"] {
+  transform-origin: left center;
+  transition: transform 0.9s var(--ease) var(--d, 0s);
+}
+[data-reveal="line"][data-armed]:not([data-in]) {
+  transform: scaleX(0);
+}
+[data-reveal="line-y"] {
+  transform-origin: center top;
+  transition: transform 1.1s var(--ease) var(--d, 0s);
+}
+[data-reveal="line-y"][data-armed]:not([data-in]) {
+  transform: scaleY(0);
+}
+/* Signature "writes itself" left to right (footer) — same move the intro uses. */
+[data-reveal="wipe"] > * {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1s cubic-bezier(0.4, 0, 0.2, 1) var(--d, 0s);
+}
+[data-reveal="wipe"][data-armed]:not([data-in]) > * {
+  clip-path: inset(0 100% 0 0);
+}
+
+/* Masked line / word reveals: the text slides up out of its own clipping box. */
+.mask-line,
+.word-mask {
   overflow: hidden;
+  /* Room for descenders (y, g, j) so the mask never clips them; the negative margin cancels it. */
+  padding-bottom: 0.32em;
+  margin-bottom: -0.32em;
 }
-.hero-glow::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(55% 60% at 88% 12%, rgba(56, 189, 248, 0.08), transparent 62%),
-    radial-gradient(60% 65% at 6% 92%, rgba(59, 130, 246, 0.08), transparent 62%);
+.mask-line {
+  display: block;
 }
-.hero-glow::after {
+.word-mask {
+  display: inline-block;
+  vertical-align: top;
+}
+.mask-line > span,
+.word-mask > span {
+  display: block;
+  transition: transform 0.8s var(--ease, cubic-bezier(0.2, 0.8, 0.2, 1)) var(--d, 0s);
+}
+.word-mask > span {
+  display: inline-block;
+}
+[data-reveal][data-armed]:not([data-in]) .mask-line > span,
+[data-reveal][data-armed]:not([data-in]) .word-mask > span {
+  transform: translateY(160%); /* clear of the mask incl. its descender padding */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  [data-reveal][data-armed]:not([data-in]),
+  [data-reveal][data-armed]:not([data-in]) > *,
+  [data-reveal][data-armed]:not([data-in]) .mask-line > span,
+  [data-reveal][data-armed]:not([data-in]) .word-mask > span {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* ---------- Hero (layout and entrance live in Hero.tsx / HeroScroll.tsx) ---------- */
+/* Faint film grain, as on the intro. */
+.hero-grain::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -107,78 +268,152 @@ body::after {
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
-.hero-glow > * {
+
+/* The portrait is a light-backdrop photograph. It is multiplied onto the hero's own grey, so the
+   photo's white backdrop becomes exactly the hero colour (no panel, no edge), and the picture's
+   edges are feathered. On desktop the figure bleeds off the bottom of the hero.
+   If the final portrait has a DARK backdrop, set backdrop: "dark" in content/portrait.ts. */
+.portrait-panel {
   position: relative;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--hero-bg);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+/* Stacked (phones, < 768px): the figure ends mid-page, so fade its bottom into the hero too. */
+@media (max-width: 767px) {
+  .portrait-panel {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 9%, #000 74%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, #000 9%, #000 74%, transparent 100%);
+  }
+}
+.portrait-panel[data-backdrop="light"] img {
+  mix-blend-mode: multiply;
+  filter: brightness(1.1); /* lifts the backdrop (242–255) to white so it matches the hero exactly */
+}
+.portrait-panel[data-backdrop="dark"] {
+  background: transparent;
 }
 
-/* Section numbers (01, 02, ...) auto-increment — no need to pass a number as a prop. */
-#site {
-  counter-reset: sec;
-}
-.section-title::before {
-  counter-increment: sec;
-  content: "0" counter(sec);
-  color: var(--accent);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 15px;
-  font-weight: 500;
-  margin-right: 14px;
-}
-
-/* Custom cursor replaces the system one, so only hide it where the cursor can track
-   (fine pointer, motion allowed) — touch devices and reduced-motion keep the real one. */
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  body,
-  a,
-  button {
-    cursor: none;
+/* ---------- About: pinned while the text fills in (see AboutFill.tsx) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  /* No pinning, no fill: the paragraph is simply fully dark. */
+  .about-pin {
+    height: auto !important;
+  }
+  .about-stage {
+    position: static;
+    height: auto;
+    min-height: 100svh;
+    padding-block: 7rem;
   }
 }
 
-/* Hero pops in when the intro finishes. Visible by default so no-JS / repeat visits are fine. */
-.hero-pop {
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-html[data-intro="playing"] .hero-pop {
-  opacity: 0;
-  transform: scale(0.96);
-}
-
-/* The two headline lines lift in with a slight stagger between them. */
-.hero-line {
-  display: block;
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.hero-line:nth-child(2) {
-  transition-delay: 0.15s;
-}
-html[data-intro="playing"] .hero-line {
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-/* Pulsing status dot on the "open to work" pill. */
+/* ---------- Nav / small details ---------- */
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.45);
+    box-shadow: 0 0 0 0 rgba(180, 154, 104, 0.45);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 8px rgba(180, 154, 104, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 0 rgba(180, 154, 104, 0);
   }
 }
-.status-dot {
+.work-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-brass);
+  margin-left: 12px;
   animation: pulse 2s infinite;
 }
+.work-text {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  letter-spacing: 0.02em;
+}
 
-/* Shared tilt + cursor-following glow for cards and the terminal (see TiltGlow.tsx). */
+/* Contact rows: the arrow nudges, the value warms to brass. Hover only where a pointer can hover,
+   so a tap on a phone doesn't leave the row stuck in its hover colour. */
+.contact-row .arrow {
+  transition: transform 0.3s ease;
+}
+.contact-row .value {
+  transition: color 0.25s ease;
+}
+.contact-row:focus-visible .arrow {
+  transform: translate(3px, -3px);
+}
+.contact-row:focus-visible .value {
+  color: var(--color-brass);
+}
+@media (hover: hover) {
+  .contact-row:hover .arrow {
+    transform: translate(3px, -3px);
+  }
+  .contact-row:hover .value {
+    color: var(--color-brass);
+  }
+}
+
+/* Footer credit — a deliberate echo of the intro's name / signature / name line. */
+.foot-credit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 2vw, 22px);
+}
+.foot-credit .name {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 500;
+  font-size: clamp(17px, 2.6vw, 28px);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-ivory);
+  white-space: nowrap;
+}
+.foot-credit .sig {
+  position: relative;
+  z-index: 1;
+  margin: 0 clamp(-64px, -8.5vw, -118px) 0 clamp(-42px, -6vw, -88px);
+}
+.foot-credit .sig img {
+  display: block;
+  width: clamp(150px, 17vw, 250px);
+  height: auto;
+}
+@media (max-width: 640px) {
+  .foot-credit {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .foot-credit .name {
+    font-size: 14px;
+    letter-spacing: 0.3em;
+  }
+  .foot-credit .sig {
+    margin: -8px 0;
+  }
+  .foot-credit .sig img {
+    width: 110px;
+  }
+}
+
+/* Shared tilt + cursor-following glow (see TiltGlow.tsx). No longer used by the cards; kept so
+   it can be re-enabled. Recoloured to the new palette. */
 .tilt-glow {
   position: relative;
   transition:
@@ -186,7 +421,7 @@ html[data-intro="playing"] .hero-line {
     border-color 0.25s ease;
 }
 .tilt-glow:hover {
-  border-color: rgba(59, 130, 246, 0.35);
+  border-color: rgba(180, 154, 104, 0.35);
 }
 .tilt-glow::after {
   content: "";
@@ -196,47 +431,10 @@ html[data-intro="playing"] .hero-line {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
-  background: radial-gradient(220px circle at var(--gx, 50%) var(--gy, 50%), rgba(233, 237, 243, 0.07), transparent 60%);
+  background: radial-gradient(220px circle at var(--gx, 50%) var(--gy, 50%), rgba(234, 226, 213, 0.07), transparent 60%);
 }
 .tilt-glow:hover::after {
   opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-pop,
-  .hero-line,
-  .tilt-glow {
-    transition: none;
-  }
-}
-
-.cursor-ring.grow {
-  width: 56px;
-  height: 56px;
-  background: rgba(59, 130, 246, 0.08);
-  border-color: rgba(59, 130, 246, 0.85);
-}
-
-/* Small pulsing "available" indicator next to the name in the nav. */
-.work-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #34d399;
-  margin-left: 12px;
-  animation: pulse 2s infinite;
-}
-.work-text {
-  margin-left: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #34d399;
-  letter-spacing: 0.02em;
-}
-
-/* GitHub/live link at the bottom of a featured project card. */
-.proj-link {
-  color: #34d399;
 }
 
 /* Blinking block cursor on the terminal's self-typing prompt. */
@@ -253,24 +451,15 @@ html[data-intro="playing"] .hero-line {
 .typing-caret {
   animation: caret-blink 1s steps(1, end) infinite;
 }
-@media (prefers-reduced-motion: reduce) {
-  .typing-caret {
-    animation: none;
-  }
-}
 
-/* Visitors who ask for reduced motion: nothing on the page should move on its own, and
-   links should jump instead of gliding. Kept at the very end of the file so it wins over
-   the animation rules defined above (the dots are declared late, after the earlier
-   reduced-motion block). Without this, the blanket rule in intro.css squeezes each pulse
-   to 0.00001s and repeats it forever, which flickers instead of pulsing. */
+/* Visitors who ask for reduced motion: nothing moves on its own. Kept at the very end so it
+   wins over the rules above. */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  .tilt-glow {
+    transition: none;
   }
-  body::before,
-  .status-dot,
-  .work-dot {
+  .work-dot,
+  .typing-caret {
     animation: none;
   }
 }

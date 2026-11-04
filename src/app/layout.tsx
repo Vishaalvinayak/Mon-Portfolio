@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Cormorant_Garamond } from "next/font/google";
 import { CustomCursor } from "@/components/motion/CustomCursor";
+import { RevealController } from "@/components/motion/RevealController";
 import { profile } from "@/content/resume";
 import { introFrequency } from "@/content/intro";
 import "./globals.css";
@@ -10,12 +11,14 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
 });
 
-// Serif used only for the hero headline — everything else stays on the grotesk above.
+// Serif for the large editorial headings (hero name, section titles, project names).
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["500", "600"],
   variable: "--font-cormorant",
 });
+
+export const viewport: Viewport = { themeColor: "#211A15" };
 
 const title = `${profile.name} — ${profile.role}`;
 
@@ -50,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <CustomCursor />
+        <RevealController />
         {children}
       </body>
     </html>

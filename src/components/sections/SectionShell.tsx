@@ -1,20 +1,22 @@
-import { Reveal } from "@/components/motion/Reveal";
+import { SectionHeading } from "./SectionHeading";
+
+export type Tone = "dark" | "charcoal" | "work" | "espresso" | "light" | "paper" | "grey";
 
 interface SectionShellProps {
   id: string;
-  title: string;
+  title: string | string[];
+  tone: Tone;
   children: React.ReactNode;
 }
 
-// The "01 / 02 / ..." prefix comes from a CSS counter on .section-title::before
-// (see globals.css) — sections don't need to track or pass their own number.
-export function SectionShell({ id, title, children }: SectionShellProps) {
+// Colours come from data-tone (globals.css), so every section follows the same palette rules.
+export function SectionShell({ id, title, tone, children }: SectionShellProps) {
   return (
-    <section id={id} className="border-t border-white/[0.08] px-[clamp(20px,5vw,64px)] py-16 md:py-24">
-      <Reveal>
-        <h2 className="section-title mb-10 text-xl font-semibold">{title}</h2>
-      </Reveal>
-      {children}
+    <section id={id} data-tone={tone} className="relative px-[clamp(20px,5vw,64px)] py-24 md:py-36">
+      <div className="mx-auto max-w-[1440px]">
+        <SectionHeading title={title} />
+        {children}
+      </div>
     </section>
   );
 }
