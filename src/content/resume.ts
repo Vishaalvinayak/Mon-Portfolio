@@ -46,7 +46,6 @@ export const education: Education[] = [
     degree: "Bachelor of Computer Applications (BCA)",
     start: "June 2023",
     end: "May 2026",
-    note: "Final year",
     grade: "CGPA: 8.56",
     location: "Kattankulathur, Tamil Nadu",
   },
